@@ -1,0 +1,22 @@
+:root {
+  --bg-base: #0f172a;
+  --bg-surface: #1e293b;
+  --primary: #38bdf8;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  
+  --status-pending: #94a3b8;
+  --status-progress: #f59e0b;
+  --status-completed: #10b981;
+  
+  --border-ui: #334155;
+  --font-main: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+body {
+  background-color: var(--bg-base);
+  color: var(--text-main);
+  font-family: var(--font-main);
+  margin: 0;
+}
