@@ -1,0 +1,85 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-align: left;
+}
+
+.inputWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.icon {
+    position: absolute;
+    left: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted, #727785);
+}
+
+.input {
+    background-color: transparent;
+    border: 1px solid var(--border-ui);
+    border-radius: 6px;
+    padding: 0.625rem 0.75rem;
+    color: var(--text-main);
+    font-family: var(--font-main);
+    font-size: 0.875rem;
+    transition: border-color 0.2s, background-color 0.2s;
+    width: 100%;
+}
+
+.hasIcon {
+    padding-left: 2.5rem;
+}
+
+.hasAction {
+    padding-right: 2.5rem;
+}
+
+.togglePassword {
+    position: absolute;
+    right: 0.75rem;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted, #727785);
+    transition: color 0.2s;
+}
+
+.togglePassword:hover {
+    color: var(--text-main, #ffffff);
+}
+
+.input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.inputError {
+    border-color: #ef4444;
+}
+.inputError:focus {
+    border-color: #ef4444;
+}
+
+.errorText {
+    font-size: 0.75rem;
+    color: #ef4444;
+    margin-top: -0.25rem;
+}
