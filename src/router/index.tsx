@@ -1,9 +1,6 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router-dom';
 import { RootLayout } from '../components/layout/RootLayout';
-import { PublicLayout } from '../components/layout/PublicLayout';
-import { ProtectedLayout } from '../components/layout/ProtectedLayout';
-import { Login } from '../pages/login/Login';
-import { Dashboard } from '../pages/dashboard/Dashboard';
+import { SmartRoot } from '../components/layout/SmartRoot';
 
 export const router = createBrowserRouter([
   {
@@ -12,25 +9,7 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Navigate to="/dashboard" replace />,
-      },
-      {
-        element: <PublicLayout />,
-        children: [
-          {
-            path: 'login',
-            element: <Login />,
-          },
-        ],
-      },
-      {
-        element: <ProtectedLayout />,
-        children: [
-          {
-            path: 'dashboard',
-            element: <Dashboard />,
-          },
-        ],
+        element: <SmartRoot />,
       },
     ],
   },
