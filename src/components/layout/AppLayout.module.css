@@ -1,0 +1,123 @@
+.layoutContainer {
+  display: flex;
+  min-height: 100vh;
+  background-color: #0F1418;
+  color: #dee3e8;
+  font-family: 'Inter', sans-serif;
+  overflow: hidden;
+}
+
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 0;
+  background-color: #111827;
+  width: 256px;
+  border-right: 1px solid #1E293B;
+}
+
+.header {
+  padding: 0 24px;
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logoIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background-color: rgba(56, 189, 248, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  color: #38BDF8;
+}
+
+.logoText {
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  color: #38BDF8;
+  margin: 0;
+  line-height: 1;
+}
+
+.logoSubtitle {
+  font-size: 10px;
+  color: #94A3B8;
+  font-weight: 500;
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.newProjectContainer {
+  padding: 0 16px;
+  margin-bottom: 24px;
+}
+
+.navMenu {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 12px;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+  border-left: 2px solid transparent;
+}
+
+.navItemActive {
+  color: #38BDF8;
+  background-color: rgba(56, 189, 248, 0.1);
+  border-left-color: #38BDF8;
+}
+
+.navItemInactive {
+  color: #94A3B8;
+}
+
+.navItemInactive:hover {
+  color: #F8FAFC;
+  background-color: #1E293B;
+}
+
+.footerMenu {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 12px 0;
+  border-top: 1px solid #1E293B;
+}
+
+.mainContent {
+  flex: 1;
+  margin-left: 256px;
+  padding: 24px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+  position: relative;
+  overflow-y: auto;
+  box-sizing: border-box;
+}

@@ -4,7 +4,7 @@ export const httpClient = async <T>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<T> => {
-  const token = localStorage.getItem('koda_token');
+  const token = localStorage.getItem('koda_token') || sessionStorage.getItem('koda_token');
 
   const headers: HeadersInit = {
     'Content-Type': 'application/json',
