@@ -54,11 +54,11 @@
   margin-bottom: 32px;
 }
 
-.headerIcon {
-  color: #d8e2ff;
-  font-size: 2.25rem;
+.headerLogo {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
   margin-bottom: 8px;
-  font-variation-settings: 'wght' 300;
 }
 
 .headerTitle {

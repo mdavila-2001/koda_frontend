@@ -69,7 +69,7 @@ export const Login: React.FC = () => {
       
       <div className={styles.loginCard}>
         <div className={styles.header}>
-          <span className={`material-symbols-outlined ${styles.headerIcon}`}>dns</span>
+          <img src="/koda.png" alt="Koda Logo" className={styles.headerLogo} />
           <h1 className={styles.headerTitle}>KODA</h1>
         </div>
 
