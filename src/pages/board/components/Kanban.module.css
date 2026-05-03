@@ -1,0 +1,540 @@
+/* ============================================================
+   KODA — Kanban Board CSS Module
+   Paleta oscura nativa, zero Tailwind.
+   ============================================================ */
+
+/* ──────────── Board Layout ──────────── */
+
+.boardPage {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  margin-left: 240px;
+}
+
+.boardScroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 32px 48px;
+}
+
+@media (max-width: 768px) {
+  .boardScroll {
+    padding: 16px;
+  }
+}
+
+.boardInner {
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  height: 100%;
+}
+
+/* ──────────── Board Header ──────────── */
+
+.boardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+@media (min-width: 640px) {
+  .boardHeader {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.boardTitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: #dee3e8;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.boardSubtitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: #87929a;
+  margin-top: 4px;
+}
+
+.newTicketButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #38BDF8;
+  color: #0F172A;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 12px 24px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+  white-space: nowrap;
+}
+
+.newTicketButton:hover {
+  filter: brightness(1.1);
+}
+
+.newTicketButton:active {
+  transform: scale(0.95);
+}
+
+.newTicketButton .iconSmall {
+  font-size: 18px;
+}
+
+/* ──────────── Search Bar ──────────── */
+
+.searchContainer {
+  background-color: #111827;
+  border: 1px solid #1E293B;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex-shrink: 0;
+  box-shadow: 0 4px 24px rgba(2, 6, 23, 0.5);
+}
+
+@media (min-width: 1024px) {
+  .searchContainer {
+    flex-direction: row;
+  }
+}
+
+.searchWrapper {
+  flex: 1;
+  position: relative;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #87929a;
+  font-size: 20px;
+  pointer-events: none;
+}
+
+.searchInput {
+  width: 100%;
+  background-color: #0F172A;
+  border: 1px solid #1E293B;
+  border-radius: 6px;
+  padding: 10px 16px 10px 40px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: #dee3e8;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.searchInput::placeholder {
+  color: #87929a;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #38BDF8;
+  box-shadow: 0 0 0 1px #38BDF8;
+}
+
+/* ──────────── Kanban Container ──────────── */
+
+.kanbanContainer {
+  flex: 1;
+  overflow: hidden;
+}
+
+.kanbanGrid {
+  display: flex;
+  gap: 24px;
+  height: calc(100vh - 250px);
+  overflow-x: auto;
+  padding-bottom: 16px;
+}
+
+.kanbanGrid::-webkit-scrollbar {
+  height: 6px;
+}
+
+.kanbanGrid::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.kanbanGrid::-webkit-scrollbar-thumb {
+  background-color: #1E293B;
+  border-radius: 3px;
+}
+
+.loadingState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #87929a;
+  font-family: 'Inter', sans-serif;
+}
+
+.dragOverlayWrapper {
+  cursor: grabbing;
+}
+
+/* ──────────── Column ──────────── */
+
+.column {
+  flex: 0 0 340px;
+  width: 340px;
+  height: 100%;
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
+  background-color: #111827;
+  border-radius: 12px;
+  border: 1px solid #1E293B;
+  box-shadow: 0 8px 24px -4px rgba(2, 6, 23, 0.5);
+}
+
+.columnHeader {
+  padding: 16px;
+  border-bottom: 1px solid #1E293B;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.columnHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.columnTitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+.ticketCount {
+  background-color: #1E293B;
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.columnMenuButton {
+  background: none;
+  border: none;
+  color: #87929a;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s ease;
+}
+
+.columnMenuButton:hover {
+  color: #dee3e8;
+}
+
+.columnBody {
+  padding: 8px;
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 150px;
+}
+
+.columnBody::-webkit-scrollbar {
+  width: 4px;
+}
+
+.columnBody::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.columnBody::-webkit-scrollbar-thumb {
+  background-color: #1E293B;
+  border-radius: 2px;
+}
+
+/* ── Status Colors (Column) ── */
+
+.column[data-status="PENDING"] .columnTitle {
+  color: #94A3B8;
+}
+.column[data-status="PENDING"] .ticketCount {
+  color: #94A3B8;
+}
+
+.column[data-status="IN_PROGRESS"] .columnTitle {
+  color: #F59E0B;
+}
+.column[data-status="IN_PROGRESS"] .ticketCount {
+  color: #F59E0B;
+}
+
+.column[data-status="COMPLETED"] .columnTitle {
+  color: #10B981;
+}
+.column[data-status="COMPLETED"] .ticketCount {
+  color: #10B981;
+}
+
+/* ── Status Dots ── */
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.statusDot[data-status="PENDING"] {
+  background-color: #94A3B8;
+}
+
+.statusDot[data-status="IN_PROGRESS"] {
+  background-color: #F59E0B;
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.5);
+}
+
+.statusDot[data-status="COMPLETED"] {
+  background-color: #10B981;
+}
+
+/* ──────────── Card ──────────── */
+
+.card {
+  position: relative;
+  background-color: #0F172A;
+  border: 1px solid #1E293B;
+  border-radius: 8px;
+  padding: 16px;
+  cursor: grab;
+  transition: all 0.2s ease;
+}
+
+.card:hover {
+  border-color: rgba(56, 189, 248, 0.5);
+}
+
+.cardBlocked {
+  cursor: not-allowed;
+}
+
+.cardDragging {
+  opacity: 0.3;
+}
+
+.cardOverlay {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  border-color: #38BDF8;
+  transform: rotate(3deg) scale(1.05);
+}
+
+/* ── Card Header ── */
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+/* ── Card Badges ── */
+
+.cardBadge {
+  font-size: 10px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.cardBadgeCritical {
+  background-color: rgba(147, 0, 10, 0.2);
+  color: #ffb4ab;
+  border: 1px solid rgba(147, 0, 10, 0.5);
+}
+
+.cardBadgeDone {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: #10B981;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.cardBadgeDone .badgeIcon {
+  font-size: 12px;
+}
+
+.cardBadgeDefault {
+  background-color: rgba(56, 189, 248, 0.1);
+  color: #38BDF8;
+  border: 1px solid rgba(56, 189, 248, 0.2);
+}
+
+/* ── Card ID ── */
+
+.cardId {
+  color: #87929a;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+}
+
+.cardIdCompleted {
+  text-decoration: line-through;
+  text-decoration-color: #3e484f;
+}
+
+/* ── Card Content ── */
+
+.cardTitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #dee3e8;
+  margin: 0 0 8px 0;
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cardDescription {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  color: #bdc8d1;
+  margin: 0 0 16px 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ── Card Footer ── */
+
+.cardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid #1E293B;
+}
+
+.cardDate {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #87929a;
+}
+
+.cardDateIcon {
+  font-size: 14px;
+}
+
+.cardDateText {
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ── Card Avatar ── */
+
+.cardAvatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #3e495d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  color: #aeb9d0;
+  border: 1px solid #3e484f;
+  text-transform: uppercase;
+}
+
+/* ── Card Lock (Blocked) ── */
+
+.cardLock {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #252b2e;
+  border: 1px solid rgba(255, 180, 171, 0.3);
+  color: #ffb4ab;
+}
+
+.cardLockIcon {
+  font-size: 14px;
+}
+
+.cardLockTooltip {
+  position: absolute;
+  bottom: 100%;
+  margin-bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: none;
+  width: max-content;
+  background-color: #dee3e8;
+  color: #0F1418;
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 20;
+  white-space: nowrap;
+}
+
+.cardLockTooltipArrow {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 4px;
+  border-style: solid;
+  border-color: #dee3e8 transparent transparent transparent;
+}
+
+.cardLock:hover .cardLockTooltip {
+  display: block;
+}
