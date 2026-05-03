@@ -1,6 +1,39 @@
+.mainContent {
+  margin-left: 256px;
+  flex: 1;
+  padding: 32px 48px;
+  z-index: 10;
+  position: relative;
+  overflow-y: auto;
+  height: 100vh;
+  box-sizing: border-box;
+}
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
+}
+
+.newProjectButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #38BDF8;
+  color: #0F172A;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 12px 24px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+  white-space: nowrap;
+}
+
+.newProjectButton:hover {
+  filter: brightness(1.1);
 }
 
 .header {

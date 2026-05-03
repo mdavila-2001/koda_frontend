@@ -109,6 +109,20 @@
   border-top: 1px solid #1E293B;
 }
 
+.navItemDanger {
+  color: #EF4444;
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+}
+
+.navItemDanger:hover {
+  color: #f87171;
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
 .mainContent {
   flex: 1;
   margin-left: 256px;

@@ -126,7 +126,7 @@ export const Register: React.FC = () => {
 
           <Button type="submit" isLoading={isLoading} className={styles.submitBtn}>
             <span>Crear Cuenta</span>
-            {!isLoading && <span className="material-symbols-outlined text-sm">how_to_reg</span>}
+            {!isLoading && <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>how_to_reg</span>}
           </Button>
 
           <Link to="/" className={styles.navLink}>

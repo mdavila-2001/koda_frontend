@@ -118,7 +118,7 @@ export const Login: React.FC = () => {
 
           <Button type="submit" isLoading={isLoading} className={styles.submitBtn}>
             <span>Iniciar Sesión</span>
-            {!isLoading && <span className="material-symbols-outlined text-sm">arrow_forward</span>}
+            {!isLoading && <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>arrow_forward</span>}
           </Button>
 
           <Link to="/register" className={styles.navLink}>

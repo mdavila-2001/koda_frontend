@@ -1,41 +1,92 @@
-@import "tailwindcss";
+/* ============================================================
+   KODA — Global Styles
+   Pure vanilla CSS, zero Tailwind.
+   ============================================================ */
 
-@theme {
-  --color-background: #0f1418;
-  --color-on-background: #dee3e8;
-  --color-surface-container-high: #252b2e;
-  --color-primary-container: #38bdf8;
-  --color-on-surface: #dee3e8;
-  --color-on-surface-variant: #bdc8d1;
-  --color-outline-variant: #3e484f;
-  --color-secondary: #bcc7de;
-  --color-tertiary-container: #f1a02b;
-  --color-error: #ffb4ab;
-  --color-error-container: #93000a;
-  --color-secondary-container: #3e495d;
-  --color-on-secondary-container: #aeb9d0;
-  --color-surface-bright: #343a3e;
-  --color-outline: #87929a;
-  --color-secondary-fixed: #d8e3fb;
-  
-  --font-body-md: "Inter", sans-serif;
-  --font-body-lg: "Inter", sans-serif;
-  --font-label-md: "Inter", sans-serif;
-  --font-h1: "Inter", sans-serif;
-  --font-h2: "Inter", sans-serif;
-  --font-h3: "Inter", sans-serif;
-  --font-code: monospace;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-@layer base {
-  body {
-    @apply bg-background text-on-background font-body-md antialiased;
-  }
+:root {
+  /* Backgrounds */
+  --bg-base: #0F1418;
+  --bg-surface: #0F172A;
+  --bg-panel: #111827;
+  --bg-elevated: #1E293B;
+
+  /* Text */
+  --text-main: #dee3e8;
+  --text-secondary: #87929a;
+  --text-variant: #bdc8d1;
+
+  /* Primary */
+  --primary: #38BDF8;
+  --primary-dim: rgba(56, 189, 248, 0.1);
+
+  /* Borders */
+  --border-ui: #1E293B;
+  --border-strong: #3e484f;
+
+  /* Status */
+  --status-pending: #94A3B8;
+  --status-progress: #F59E0B;
+  --status-completed: #10B981;
+
+  /* Error */
+  --error: #ffb4ab;
+  --error-container: #93000a;
+
+  /* Fonts */
+  --font-main: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
 }
 
-@layer utilities {
-  .panel-bg {
-    background-color: #1E293B;
-    box-shadow: 0 10px 25px -5px rgba(2, 6, 23, 0.5), 0 8px 10px -6px rgba(2, 6, 23, 0.5);
-  }
+body {
+  background-color: var(--bg-base);
+  color: var(--text-main);
+  font-family: var(--font-main);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: var(--font-main);
+}
+
+input,
+textarea,
+select {
+  font-family: var(--font-main);
+}
+
+/* Scrollbar global styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--border-ui);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--border-strong);
 }
