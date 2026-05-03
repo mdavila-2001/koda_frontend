@@ -1,7 +1,13 @@
+/* ============================================================
+   KODA — Design Tokens (variables.css)
+   Kept for backward compatibility.
+   Primary tokens now live in index.css :root.
+   ============================================================ */
+
 :root {
-  --bg-base: #0f172a;
-  --bg-surface: #1e293b;
-  --primary: #38bdf8;
+  --bg-base: #0F172A;
+  --bg-surface: #1E293B;
+  --primary: #38BDF8;
   --text-main: #f8fafc;
   --text-muted: #94a3b8;
   
@@ -12,11 +18,4 @@
   --border-ui: #334155;
   --font-main: 'Inter', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
-}
-
-body {
-  background-color: var(--bg-base);
-  color: var(--text-main);
-  font-family: var(--font-main);
-  margin: 0;
 }

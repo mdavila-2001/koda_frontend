@@ -1,0 +1,300 @@
+/* ============================================================
+   KODA — Team Settings CSS Module
+   ============================================================ */
+
+.pageContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+  padding: 32px 48px;
+  position: relative;
+  margin-left: 240px;
+}
+
+@media (max-width: 768px) {
+  .pageContainer {
+    padding: 16px;
+  }
+}
+
+.card {
+  width: 100%;
+  max-width: 768px;
+  background-color: #1E293B;
+  box-shadow: 0 10px 25px -5px rgba(2, 6, 23, 0.5), 0 8px 10px -6px rgba(2, 6, 23, 0.5);
+  border-radius: 12px;
+  padding: 24px 32px;
+  border: 1px solid #3e484f;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .card {
+    padding: 24px;
+  }
+}
+
+/* ── Header ── */
+
+.headerSection {
+  margin-bottom: 32px;
+  border-bottom: 1px solid #3e484f;
+  padding-bottom: 24px;
+}
+
+.headerTitle {
+  font-size: 24px;
+  font-weight: 600;
+  color: #dee3e8;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.01em;
+}
+
+.headerSubtitle {
+  font-size: 14px;
+  color: #bdc8d1;
+  margin: 0;
+}
+
+/* ── Invite Section ── */
+
+.inviteSection {
+  margin-bottom: 32px;
+}
+
+.sectionTitle {
+  font-size: 20px;
+  font-weight: 600;
+  color: #dee3e8;
+  margin: 0 0 8px 0;
+}
+
+.sectionSubtitle {
+  font-size: 14px;
+  color: #bdc8d1;
+  margin: 0 0 24px 0;
+}
+
+/* ── Alerts ── */
+
+.errorAlert {
+  margin-bottom: 16px;
+  background-color: #93000a;
+  color: #ffb4ab;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.successAlert {
+  margin-bottom: 16px;
+  background-color: rgba(56, 189, 248, 0.1);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* ── Invite Form ── */
+
+.inviteForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@media (min-width: 640px) {
+  .inviteForm {
+    flex-direction: row;
+  }
+}
+
+.inputWrapper {
+  flex: 1;
+  position: relative;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #87929a;
+  pointer-events: none;
+}
+
+.emailInput {
+  width: 100%;
+  background-color: #0F172A;
+  border: 1px solid #3e484f;
+  border-radius: 8px;
+  color: #dee3e8;
+  padding: 10px 16px 10px 40px;
+  font-size: 14px;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.emailInput::placeholder {
+  color: #87929a;
+}
+
+.emailInput:focus {
+  outline: none;
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 1px #38bdf8;
+}
+
+.inviteButton {
+  background-color: #38bdf8;
+  color: #0f1418;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 24px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  min-width: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+}
+
+.inviteButton:hover {
+  filter: brightness(1.1);
+}
+
+.inviteButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Members List ── */
+
+.membersSection {
+  /* no special styles needed */
+}
+
+.membersList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.memberRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  cursor: default;
+  transition: all 0.15s ease;
+}
+
+.memberRow:hover {
+  background-color: rgba(62, 73, 93, 0.5);
+  border-color: #3e484f;
+}
+
+.memberInfo {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.memberAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #3e484f;
+}
+
+.memberAvatarPlaceholder {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #303539;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #3e484f;
+  color: #dee3e8;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.memberName {
+  font-size: 14px;
+  font-weight: 500;
+  color: #dee3e8;
+  margin: 0;
+}
+
+.memberEmail {
+  font-size: 12px;
+  color: #87929a;
+  margin: 0;
+}
+
+.memberActions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.statusBadgeActive {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background-color: rgba(56, 189, 248, 0.1);
+  color: #38bdf8;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid rgba(56, 189, 248, 0.2);
+}
+
+.statusBadgeDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #38bdf8;
+}
+
+.statusBadgePending {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  background-color: #303539;
+  color: #bdc8d1;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid #3e484f;
+}
+
+.moreButton {
+  background: none;
+  border: none;
+  color: #87929a;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s ease;
+}
+
+.moreButton:hover {
+  color: #dee3e8;
+}
