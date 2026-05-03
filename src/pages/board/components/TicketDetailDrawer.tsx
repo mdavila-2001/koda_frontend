@@ -75,7 +75,7 @@ export const TicketDetailDrawer: React.FC<TicketDetailDrawerProps> = ({ ticket, 
   };
 
   const handleDeleteTicket = async () => {
-    if (!confirm('Are you sure you want to delete this ticket?')) return;
+    if (!confirm('¿Estás seguro de que deseas eliminar este ticket?')) return;
     setIsDeleting(true);
     try {
       await httpClient(`/tickets/${ticket.id}`, { method: 'DELETE' });
@@ -90,6 +90,67 @@ export const TicketDetailDrawer: React.FC<TicketDetailDrawerProps> = ({ ticket, 
 
   const isPending = ticket.status === 'PENDING';
 
+  // Render helpers to reduce complexity and address nested ternary warnings
+  const renderAssigneeSection = () => {
+    if (isLoadingData) {
+      return <div className={styles.loadingText}>Cargando...</div>;
+    }
+
+    if (user?.id === project?.owner_id) {
+      return (
+        <select
+          id="assignee-select"
+          value={ticket.assigned_user_id || ''}
+          onChange={(e) => handleAssignUser(e.target.value)}
+          disabled={isUpdating}
+          className={styles.assigneeSelect}
+        >
+          <option value="" disabled>Elije un responsable...</option>
+          {members.map(member => (
+            <option key={member.id} value={member.id}>
+              {member.name} ({member.email})
+            </option>
+          ))}
+        </select>
+      );
+    }
+
+    if (assignedUser) {
+      return (
+        <div className={styles.assigneeInfo}>
+          <span className="material-symbols-outlined">person_check</span>
+          <span>{assignedUser.name} ({assignedUser.email})</span>
+        </div>
+      );
+    }
+
+    if (ticket.assigned_user_id) {
+      return (
+        <div className={styles.assigneeInfo}>
+          <span className="material-symbols-outlined">person_check</span>
+          <span>Assigned to Team Member</span>
+        </div>
+      );
+    }
+
+    return (
+      <button
+        onClick={handleAssignToMe}
+        disabled={isUpdating}
+        className={styles.assignButton}
+      >
+        <span className="material-symbols-outlined">person_add</span>
+        {' '}Asignarme
+      </button>
+    );
+  };
+
+  const getStatusActionLabel = () => {
+    if (isUpdating) return 'Actualizando...';
+    if (isPending) return 'Empezar';
+    return 'Marcar como Completado';
+  };
+
   return (
     <aside className={styles.drawer}>
       <div className={styles.drawerHeader}>
@@ -102,65 +163,30 @@ export const TicketDetailDrawer: React.FC<TicketDetailDrawerProps> = ({ ticket, 
             <span className={styles.drawerStatusText}>{ticket.status}</span>
           </div>
         </div>
-        <button onClick={onClose} className={styles.drawerCloseButton}>
+        <button onClick={onClose} className={styles.drawerCloseButton} aria-label="Close drawer">
           <span className="material-symbols-outlined">close</span>
         </button>
       </div>
 
       <div className={styles.drawerBody}>
         <div className={styles.fieldGroup}>
-          <label className={styles.fieldLabel}>Title</label>
-          <input readOnly className={styles.fieldInput} type="text" value={ticket.title} />
+          <label htmlFor="ticket-title" className={styles.fieldLabel}>Título</label>
+          <input id="ticket-title" readOnly className={styles.fieldInput} type="text" value={ticket.title} />
         </div>
         
         <div className={styles.fieldGroup}>
-          <label className={styles.fieldLabel}>Description</label>
-          <textarea readOnly className={styles.fieldTextarea} value={ticket.description || ''}></textarea>
+          <label htmlFor="ticket-description" className={styles.fieldLabel}>Descripción</label>
+          <textarea id="ticket-description" readOnly className={styles.fieldTextarea} value={ticket.description || ''}></textarea>
         </div>
 
         <div className={styles.fieldGroup}>
-          <label className={styles.fieldLabel}>Assignee</label>
-          {isLoadingData ? (
-             <div className={styles.loadingText}>Loading assignees...</div>
-          ) : user?.id === project?.owner_id ? (
-             <select
-                value={ticket.assigned_user_id || ''}
-                onChange={(e) => handleAssignUser(e.target.value)}
-                disabled={isUpdating}
-                className={styles.assigneeSelect}
-             >
-                <option value="" disabled>Select an assignee...</option>
-                {members.map(member => (
-                   <option key={member.id} value={member.id}>
-                     {member.name} ({member.email})
-                   </option>
-                ))}
-             </select>
-          ) : assignedUser ? (
-             <div className={styles.assigneeInfo}>
-                <span className="material-symbols-outlined">person_check</span>
-                <span>{assignedUser.name} ({assignedUser.email})</span>
-             </div>
-          ) : ticket.assigned_user_id ? (
-             <div className={styles.assigneeInfo}>
-                <span className="material-symbols-outlined">person_check</span>
-                <span>Assigned to Team Member</span>
-             </div>
-          ) : (
-             <button
-                onClick={handleAssignToMe}
-                disabled={isUpdating}
-                className={styles.assignButton}
-             >
-                <span className="material-symbols-outlined">person_add</span>
-                Assign to me
-             </button>
-          )}
+          <label htmlFor="assignee-select" className={styles.fieldLabel}>Responsable</label>
+          {renderAssigneeSection()}
         </div>
 
         <div className={styles.metaSection}>
           <div className={styles.metaRow}>
-            <span>Created</span>
+            <span>Creado</span>
             <span className={styles.metaValue}>{new Date(ticket.created_at).toLocaleDateString()}</span>
           </div>
         </div>
@@ -175,11 +201,11 @@ export const TicketDetailDrawer: React.FC<TicketDetailDrawerProps> = ({ ticket, 
           <span className="material-symbols-outlined">
             {isPending ? 'play_arrow' : 'done'}
           </span>
-          {isUpdating ? 'Updating...' : isPending ? 'Start Progress' : 'Mark as Completed'}
+          {getStatusActionLabel()}
         </button>
         <button onClick={handleDeleteTicket} disabled={isDeleting} className={styles.deleteButton}>
           <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>delete</span>
-          {isDeleting ? 'Deleting...' : 'Delete Ticket'}
+          {' '}Eliminar Ticket
         </button>
       </div>
     </aside>

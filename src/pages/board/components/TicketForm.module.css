@@ -1,15 +1,9 @@
-/* ============================================================
-   KODA — Ticket Form CSS Module
-   ============================================================ */
-
 .form {
   display: flex;
   flex-direction: column;
   gap: 24px;
   padding: 24px;
 }
-
-/* ── Error Banner ── */
 
 .globalError {
   background-color: #93000a;
@@ -19,8 +13,6 @@
   font-family: 'Inter', sans-serif;
   font-size: 14px;
 }
-
-/* ── Field ── */
 
 .formField {
   display: flex;
@@ -109,8 +101,6 @@
   font-weight: 600;
   color: #ffb4ab;
 }
-
-/* ── Actions ── */
 
 .formActions {
   display: flex;

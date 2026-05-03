@@ -1,35 +1,16 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AppLayout } from '../../components/layout/AppLayout';
-import { httpClient } from '../../api/httpClient';
-import type { User } from '../../types';
+import { useTeamMembers } from '../../hooks/useTeamMembers';
 import styles from './TeamSettings.module.css';
 
 export const TeamSettings: React.FC = () => {
     const { projectId } = useParams<{ projectId: string }>();
+    const { members, isLoading: isLoadingMembers, inviteMember } = useTeamMembers(projectId);
     const [email, setEmail] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
-    const [members, setMembers] = useState<User[]>([]);
-    const [isLoadingMembers, setIsLoadingMembers] = useState(true);
-
-    const fetchMembers = useCallback(async () => {
-        if (!projectId) return;
-        setIsLoadingMembers(true);
-        try {
-            const data = await httpClient<User[]>(`/projects/${projectId}/members`);
-            setMembers(data);
-        } catch (err) {
-            console.error('Failed to fetch members', err);
-        } finally {
-            setIsLoadingMembers(false);
-        }
-    }, [projectId]);
-
-    useEffect(() => {
-        fetchMembers();
-    }, [fetchMembers]);
 
     const handleInvite = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -39,18 +20,57 @@ export const TeamSettings: React.FC = () => {
 
         setIsLoading(true);
         try {
-            await httpClient(`/projects/${projectId}/members`, {
-                method: 'POST',
-                body: JSON.stringify({ email }),
-            });
-            setSuccess('Member invited successfully!');
+            await inviteMember(email);
+            setSuccess('¡Miembro invitado exitosamente!');
             setEmail('');
-            fetchMembers();
-        } catch (err: any) {
-            setError(err.message || 'Failed to invite member');
+        } catch (err: unknown) {
+            const message = err instanceof Error ? err.message : 'Error al invitar al miembro';
+            setError(message);
         } finally {
             setIsLoading(false);
         }
+    };
+
+    const renderMembersList = () => {
+        if (isLoadingMembers) {
+            return (
+                <div className={styles.memberRow}>
+                    <div className={styles.memberInfo}>
+                        <p className={styles.memberEmail}>Cargando miembros...</p>
+                    </div>
+                </div>
+            );
+        }
+
+        if (members.length === 0) {
+            return (
+                <div className={styles.memberRow}>
+                    <div className={styles.memberInfo}>
+                        <p className={styles.memberEmail}>Sin miembros aún. Invita a alguien arriba.</p>
+                    </div>
+                </div>
+            );
+        }
+
+        return members.map(member => (
+            <div key={member.id} className={styles.memberRow}>
+                <div className={styles.memberInfo}>
+                    <div className={styles.memberAvatarPlaceholder}>
+                        {member.name.substring(0, 2).toUpperCase()}
+                    </div>
+                    <div>
+                        <p className={styles.memberName}>{member.name}</p>
+                        <p className={styles.memberEmail}>{member.email}</p>
+                    </div>
+                </div>
+                <div className={styles.memberActions}>
+                    <span className={styles.statusBadgeActive}>
+                        <span className={styles.statusBadgeDot}></span>
+                        {' '}Activo
+                    </span>
+                </div>
+            </div>
+        ));
     };
 
     return (
@@ -60,14 +80,14 @@ export const TeamSettings: React.FC = () => {
                     
                     {/* Header Section */}
                     <header className={styles.headerSection}>
-                        <h1 className={styles.headerTitle}>Team Settings</h1>
-                        <p className={styles.headerSubtitle}>Manage your team members and their account permissions here.</p>
+                        <h1 className={styles.headerTitle}>Gestión del Equipo</h1>
+                        <p className={styles.headerSubtitle}>Administra los miembros de tu equipo y sus permisos aquí.</p>
                     </header>
 
                     {/* Invite Section */}
                     <section className={styles.inviteSection}>
-                        <h2 className={styles.sectionTitle}>Invite Members</h2>
-                        <p className={styles.sectionSubtitle}>All invited members will have standard read and write permissions initially.</p>
+                        <h2 className={styles.sectionTitle}>Invitar Miembros</h2>
+                        <p className={styles.sectionSubtitle}>Los miembros invitados tendrán permisos estándar de lectura y escritura inicialmente.</p>
                         
                         {error && <div className={styles.errorAlert}>{error}</div>}
                         {success && <div className={styles.successAlert}>{success}</div>}
@@ -77,7 +97,7 @@ export const TeamSettings: React.FC = () => {
                                 <span aria-hidden="true" className={`material-symbols-outlined ${styles.inputIcon}`}>mail</span>
                                 <input
                                     className={styles.emailInput}
-                                    placeholder="Email address"
+                                    placeholder="Correo electrónico"
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
@@ -90,47 +110,16 @@ export const TeamSettings: React.FC = () => {
                                 type="submit"
                                 disabled={isLoading}
                             >
-                                {isLoading ? 'Inviting...' : 'Invite Member'}
+                                {isLoading ? 'Invitando...' : 'Invitar Miembro'}
                             </button>
                         </form>
                     </section>
 
                     {/* Members List Section */}
                     <section className={styles.membersSection}>
-                        <h2 className={styles.sectionTitle}>Project Members</h2>
+                        <h2 className={styles.sectionTitle}>Miembros del Proyecto</h2>
                         <div className={styles.membersList}>
-                            {isLoadingMembers ? (
-                                <div className={styles.memberRow}>
-                                    <div className={styles.memberInfo}>
-                                        <p className={styles.memberEmail}>Loading members...</p>
-                                    </div>
-                                </div>
-                            ) : members.length === 0 ? (
-                                <div className={styles.memberRow}>
-                                    <div className={styles.memberInfo}>
-                                        <p className={styles.memberEmail}>No members found. Invite someone above.</p>
-                                    </div>
-                                </div>
-                            ) : (
-                                members.map(member => (
-                                    <div key={member.id} className={styles.memberRow}>
-                                        <div className={styles.memberInfo}>
-                                            <div className={styles.memberAvatarPlaceholder}>
-                                                {member.name.substring(0, 2).toUpperCase()}
-                                            </div>
-                                            <div>
-                                                <p className={styles.memberName}>{member.name}</p>
-                                                <p className={styles.memberEmail}>{member.email}</p>
-                                            </div>
-                                        </div>
-                                        <div className={styles.memberActions}>
-                                            <span className={styles.statusBadgeActive}>
-                                                <span className={styles.statusBadgeDot}></span> Active
-                                            </span>
-                                        </div>
-                                    </div>
-                                ))
-                            )}
+                            {renderMembersList()}
                         </div>
                     </section>
                 </main>

@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AppLayout } from '../../components/layout/AppLayout';
-import { httpClient } from '../../api/httpClient';
-import type { Ticket, User } from '../../types';
+import { useTickets } from '../../hooks/useTickets';
+import type { Ticket } from '../../types';
 import { TicketDetailDrawer } from './components/TicketDetailDrawer';
 import { TicketForm } from './components/TicketForm';
 import { Modal } from '../../components/ui/Modal/Modal';
@@ -22,32 +22,10 @@ import styles from './components/Kanban.module.css';
 
 export const TicketBoard: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
-  const [tickets, setTickets] = useState<Ticket[]>([]);
-  const [members, setMembers] = useState<User[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { tickets, members, isLoading, refetch, updateTicketStatus } = useTickets(projectId);
   const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const fetchTickets = useCallback(async () => {
-    if (!projectId) return;
-    setIsLoading(true);
-    try {
-      const [ticketsData, membersData] = await Promise.all([
-        httpClient<Ticket[]>(`/tickets/project/${projectId}`),
-        httpClient<User[]>(`/projects/${projectId}/members`)
-      ]);
-      setTickets(ticketsData);
-      setMembers(membersData);
-    } catch (error) {
-      console.error('Failed to fetch tickets', error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [projectId]);
-
-  useEffect(() => {
-    fetchTickets();
-  }, [fetchTickets]);
+  const [activeTicket, setActiveTicket] = useState<Ticket | null>(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -61,8 +39,6 @@ export const TicketBoard: React.FC = () => {
   const pendingTickets = tickets.filter(t => t.status === 'PENDING');
   const inProgressTickets = tickets.filter(t => t.status === 'IN_PROGRESS');
   const completedTickets = tickets.filter(t => t.status === 'COMPLETED');
-
-  const [activeTicket, setActiveTicket] = useState<Ticket | null>(null);
 
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event;
@@ -82,20 +58,7 @@ export const TicketBoard: React.FC = () => {
 
     if (!draggedTicket || draggedTicket.status === newStatus) return;
 
-    const originalTickets = [...tickets];
-    setTickets(tickets.map(t => 
-      t.id === ticketId ? { ...t, status: newStatus } : t
-    ));
-
-    try {
-      await httpClient(`/tickets/${ticketId}`, {
-        method: 'PATCH',
-        body: JSON.stringify({ status: newStatus }),
-      });
-    } catch (error) {
-      console.error('Failed to update ticket status', error);
-      setTickets(originalTickets);
-    }
+    await updateTicketStatus(ticketId, newStatus);
   };
 
   const selectedTicket = tickets.find(t => t.id === selectedTicketId);
@@ -108,11 +71,11 @@ export const TicketBoard: React.FC = () => {
             <div className={styles.boardHeader}>
               <div>
                 <h1 className={styles.boardTitle}>Tickets</h1>
-                <p className={styles.boardSubtitle}>Manage and resolve active support requests.</p>
+                <p className={styles.boardSubtitle}>Gestiona y resuelve las solicitudes de soporte activas.</p>
               </div>
               <button onClick={() => setIsModalOpen(true)} className={styles.newTicketButton}>
                 <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>add</span>
-                New Ticket
+                {' '}Nuevo Ticket
               </button>
             </div>
 
@@ -121,7 +84,7 @@ export const TicketBoard: React.FC = () => {
                 <span className={`material-symbols-outlined ${styles.searchIcon}`}>search</span>
                 <input 
                   className={styles.searchInput} 
-                  placeholder="Search tickets by title, ID, or content..." 
+                  placeholder="Buscar tickets por título, ID o contenido..." 
                   type="text"
                 />
               </div>
@@ -129,7 +92,7 @@ export const TicketBoard: React.FC = () => {
 
             <div className={styles.kanbanContainer}>
               {isLoading ? (
-                <div className={styles.loadingState}>Loading tickets...</div>
+                <div className={styles.loadingState}>Cargando tickets...</div>
               ) : (
                 <DndContext 
                   sensors={sensors}
@@ -141,21 +104,21 @@ export const TicketBoard: React.FC = () => {
                   <div className={styles.kanbanGrid}>
                     <KanbanColumn 
                       id="PENDING" 
-                      title="Pending" 
+                      title="Pendiente" 
                       tickets={pendingTickets} 
                       members={members}
                       onCardClick={setSelectedTicketId}
                     />
                     <KanbanColumn 
                       id="IN_PROGRESS" 
-                      title="In Progress" 
+                      title="En Progreso" 
                       tickets={inProgressTickets} 
                       members={members}
                       onCardClick={setSelectedTicketId}
                     />
                     <KanbanColumn 
                       id="COMPLETED" 
-                      title="Completed" 
+                      title="Completado" 
                       tickets={completedTickets} 
                       members={members}
                       onCardClick={setSelectedTicketId}
@@ -179,18 +142,18 @@ export const TicketBoard: React.FC = () => {
             ticket={selectedTicket} 
             members={members}
             onClose={() => setSelectedTicketId(null)}
-            onUpdate={fetchTickets}
+            onUpdate={refetch}
           />
         )}
         <Modal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-          title="Create New Ticket"
+          title="Crear Nuevo Ticket"
         >
           {projectId && (
             <TicketForm
               projectId={projectId}
-              onSuccess={() => { setIsModalOpen(false); fetchTickets(); }}
+              onSuccess={() => { setIsModalOpen(false); refetch(); }}
               onCancel={() => setIsModalOpen(false)}
             />
           )}

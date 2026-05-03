@@ -4,7 +4,7 @@ import { httpClient } from '../../../api/httpClient';
 import styles from './TicketForm.module.css';
 
 const ticketSchema = z.object({
-  title: z.string().min(3, 'Title must be at least 3 characters'),
+  title: z.string().min(3, 'El título debe tener al menos 3 caracteres'),
   description: z.string().optional(),
 });
 
@@ -41,17 +41,18 @@ export const TicketForm: React.FC<TicketFormProps> = ({ projectId, onSuccess, on
       });
 
       onSuccess();
-    } catch (error) {
+    } catch (error: unknown) {
       if (error instanceof z.ZodError) {
         const newErrors: typeof errors = {};
-        error.errors.forEach((err) => {
+        // Removed deprecated ZodIssue type hint, letting TS infer from issues array
+        error.issues.forEach((err) => {
           if (err.path[0]) {
             newErrors[err.path[0] as keyof TicketFormData] = err.message;
           }
         });
         setErrors(newErrors);
       } else {
-        setGlobalError(error instanceof Error ? error.message : 'An error occurred while creating the ticket');
+        setGlobalError(error instanceof Error ? error.message : 'Ocurrió un error al crear el ticket');
       }
     } finally {
       setIsSubmitting(false);
@@ -67,31 +68,31 @@ export const TicketForm: React.FC<TicketFormProps> = ({ projectId, onSuccess, on
       )}
 
       <div className={styles.formField}>
-        <label htmlFor="title" className={styles.formLabel}>
-          Ticket Title <span className={styles.required}>*</span>
+        <label htmlFor="ticket-form-title" className={styles.formLabel}>
+          Título del Ticket <span className={styles.required}>*</span>
         </label>
         <input
-          id="title"
+          id="ticket-form-title"
           type="text"
           value={formData.title}
           onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
           className={`${styles.formInput} ${errors.title ? styles.formInputError : ''}`}
-          placeholder="e.g., Fix database connection timeout"
+          placeholder="Ej. Corregir timeout de conexión a base de datos"
           disabled={isSubmitting}
         />
         {errors.title && <span className={styles.fieldError}>{errors.title}</span>}
       </div>
 
       <div className={styles.formField}>
-        <label htmlFor="description" className={styles.formLabel}>
-          Description
+        <label htmlFor="ticket-form-description" className={styles.formLabel}>
+          Descripción
         </label>
         <textarea
-          id="description"
+          id="ticket-form-description"
           value={formData.description}
           onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
           className={`${styles.formTextarea} ${errors.description ? styles.formTextareaError : ''}`}
-          placeholder="Provide detailed information about the issue..."
+          placeholder="Proporciona información detallada sobre el problema..."
           disabled={isSubmitting}
         />
         {errors.description && <span className={styles.fieldError}>{errors.description}</span>}
@@ -104,7 +105,7 @@ export const TicketForm: React.FC<TicketFormProps> = ({ projectId, onSuccess, on
           disabled={isSubmitting}
           className={styles.cancelButton}
         >
-          Cancel
+          Cancelar
         </button>
         <button
           type="submit"
@@ -114,12 +115,12 @@ export const TicketForm: React.FC<TicketFormProps> = ({ projectId, onSuccess, on
           {isSubmitting ? (
             <>
               <span className={`material-symbols-outlined ${styles.spinIcon}`} style={{ fontSize: '18px' }}>sync</span>
-              Creating...
+              {' '}Creando...
             </>
           ) : (
             <>
               <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>add</span>
-              Create Ticket
+              {' '}Crear Ticket
             </>
           )}
         </button>
