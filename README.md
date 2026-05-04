@@ -1,42 +1,42 @@
-# 🚀 KODA - Technical Workspace
+# 🚀 KODA - Espacio de Trabajo Técnico
 
-**KODA** is a premium, high-performance project management platform designed for technical teams. It provides a unified workspace for managing projects, tickets, and team collaboration with a focus on speed, precision, and clean architecture.
-
----
-
-## 🛠️ Key Features
-
-### 📊 Project Dashboard
-Overview of all active technical projects. It provides a clean interface to track the health of your workspaces and quickly jump into specific project environments.
-
-### 📋 Kanban Board
-A real-time, interactive board for ticket management. 
-- **Dynamic Tracking**: Drag-and-drop support for status updates.
-- **Visual Indicators**: Color-coded badges for priorities and status.
-- **Assignment Logic**: Visual avatar system for tracking responsible team members.
-
-### 🎫 Ticket Management
-Detailed control over development tasks and bug reports.
-- **Detailed View**: Side drawer for quick ticket inspection and editing.
-- **Status Control**: Intuitive workflow for progressing tickets from Pending to Completed.
-- **Validation**: Strict schema validation using **Zod** for data integrity.
-
-### 👥 Team Collaboration
-Manage access and responsibilities within your project.
-- **Member Assignment**: Easily assign tickets to specialized team members.
-- **Access Control**: Role-based views for project owners and collaborators.
+**KODA** es una plataforma de gestión de proyectos premium y de alto rendimiento, diseñada específicamente para equipos técnicos. Proporciona un espacio de trabajo unificado para gestionar proyectos, tickets y colaboración en equipo con un enfoque en la velocidad, la precisión y la arquitectura limpia.
 
 ---
 
-## 🏗️ Architecture & Best Practices
+## 🛠️ Características Principales
 
-Koda is built with a focus on maintainability, scalability, and **SonarQube** quality standards.
+### 📊 Dashboard de Proyectos
+Vista general de todos los proyectos técnicos activos. Proporciona una interfaz limpia para monitorear la salud de tus espacios de trabajo y acceder rápidamente a entornos de proyectos específicos.
 
-- **Modular Components**: Following a "Clean Architecture" pattern. Components are organized by domain (`kanban`, `ticket`, `project`) with their own styles and logic.
-- **React 19 Ready**: Optimized for the latest React version, using modern patterns and avoiding deprecated APIs (e.g., using `SyntheticEvent` and function-based components).
-- **Strict TypeScript**: 100% type safety with explicit definitions, `Readonly` props, and strict null checks.
-- **CSS Modules**: Scoped styling using Vanilla CSS for maximum performance and zero conflict.
-- **Global States & Context**: Robust authentication and project state management via React Context.
+### 📋 Tablero Kanban
+Un tablero interactivo en tiempo real para la gestión de tickets.
+- **Seguimiento Dinámico**: Soporte de arrastrar y soltar (drag-and-drop) para actualizaciones de estado.
+- **Indicadores Visuales**: Badges con códigos de colores para prioridades y estados.
+- **Lógica de Asignación**: Sistema visual de avatares para rastrear a los miembros responsables del equipo.
+
+### 🎫 Gestión de Tickets
+Control detallado sobre tareas de desarrollo e informes de errores.
+- **Vista Detallada**: Panel lateral para inspección rápida y edición de tickets.
+- **Control de Flujo**: Flujo de trabajo intuitivo para progresar tickets desde Pendiente hasta Completado.
+- **Validación**: Validación estricta de esquemas usando **Zod** para garantizar la integridad de los datos.
+
+### 👥 Colaboración en Equipo
+Gestiona el acceso y las responsabilidades dentro de tu proyecto.
+- **Asignación de Miembros**: Asigna fácilmente tickets a miembros especializados del equipo.
+- **Control de Acceso**: Vistas basadas en roles para propietarios de proyectos y colaboradores.
+
+---
+
+## 🏗️ Arquitectura y Mejores Prácticas
+
+Koda está construido con un enfoque en la mantenibilidad, escalabilidad y los estándares de calidad de **SonarQube**.
+
+- **Componentes Modulares**: Siguiendo un patrón de "Arquitectura Limpia". Los componentes están organizados por dominio (`kanban`, `ticket`, `project`) con sus propios estilos y lógica.
+- **Listo para React 19**: Optimizado para la versión más reciente de React, utilizando patrones modernos y evitando APIs obsoletas (ej. usando `SyntheticEvent` y componentes basados en funciones).
+- **TypeScript Estricto**: 100% seguridad de tipos con definiciones explícitas, props `Readonly` y chequeos estrictos de nulos.
+- **Módulos CSS**: Estilizado mediante CSS Modules para máximo rendimiento y cero conflictos.
+- **Estados Globales y Contexto**: Gestión robusta de autenticación y estado del proyecto mediante React Context.
 
 ---
 
@@ -44,46 +44,46 @@ Koda is built with a focus on maintainability, scalability, and **SonarQube** qu
 
 - **Framework**: [React 19](https://react.dev/)
 - **Build Tool**: [Vite](https://vitejs.dev/)
-- **Language**: [TypeScript](https://www.typescriptlang.org/)
-- **Styling**: Vanilla CSS Modules (with modern design principles like glassmorphism and dark mode)
-- **Validation**: [Zod](https://zod.dev/)
+- **Lenguaje**: [TypeScript](https://www.typescriptlang.org/)
+- **Estilos**: Vanilla CSS Modules (con principios de diseño modernos como glassmorphism y modo oscuro)
+- **Validación**: [Zod](https://zod.dev/)
 - **Drag & Drop**: [@dnd-kit](https://dndkit.com/)
-- **Routing**: [React Router v7](https://reactrouter.com/)
+- **Enrutamiento**: [React Router v7](https://reactrouter.com/)
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Empezando
 
-### Prerequisites
-- Node.js (v18 or higher)
-- npm or yarn
+### Prerrequisitos
+- Node.js (v18 o superior)
+- npm o yarn
 
-### Installation
-1. Clone the repository:
+### Instalación
+1. Clona el repositorio:
    ```bash
-   git clone <repo-url>
+   git clone <url-del-repo>
    ```
-2. Install dependencies:
+2. Instala las dependencias:
    ```bash
    npm install
    ```
-3. Set up environment variables:
-   Create a `.env` file in the root based on `.env.example`.
+3. Configura las variables de entorno:
+   Crea un archivo `.env` en la raíz basado en `.env.example`.
 
-### Running locally
+### Ejecución Local
 ```bash
 npm run dev
 ```
 
 ---
 
-## 🎨 Design Documentation
-The project includes several detailed design specifications and prototypes located in the root directory:
-- `dashboard.md`: Layout for the main workspace.
-- `kanban.md`: Detailed Kanban interactions.
-- `ticketlist.md`: List-based ticket view design.
-- `gestiondemiembros.md`: Team management workflows.
+## 🎨 Documentación de Diseño
+El proyecto incluye varias especificaciones de diseño detalladas y prototipos ubicados en el directorio raíz:
+- `dashboard.md`: Diseño para el espacio de trabajo principal.
+- `kanban.md`: Interacciones detalladas del Kanban.
+- `ticketlist.md`: Diseño de la vista de lista de tickets.
+- `gestiondemiembros.md`: Flujos de trabajo de gestión de equipos.
 
 ---
 
-**Developed with ❤️ for Technical Excellence.**
+**Desarrollado con ❤️ para la Excelencia Técnica.**
