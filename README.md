@@ -61,18 +61,18 @@ Koda está construido con un enfoque en la mantenibilidad, escalabilidad y los e
 ### Instalación
 1. Clona el repositorio:
    ```bash
-   git clone <url-del-repo>
+   git clone koda_frontend
    ```
 2. Instala las dependencias:
    ```bash
-   npm install
+   yarn install
    ```
 3. Configura las variables de entorno:
    Crea un archivo `.env` en la raíz basado en `.env.example`.
 
 ### Ejecución Local
 ```bash
-npm run dev
+yarn dev
 ```
 
 ---
