@@ -19,7 +19,7 @@ export function AppLayout({ children }: Readonly<AppLayoutProps>) {
             <aside className={styles.sidebar}>
                 <div className={styles.header}>
                     <div className={styles.logoIcon}>
-                        <span className="material-symbols-outlined">dns</span>
+                        <img src="/koda.png" alt="Koda Logo" className={styles.logoImage} />
                     </div>
                     <div>
                         <div className={styles.logoText}>KODA</div>
