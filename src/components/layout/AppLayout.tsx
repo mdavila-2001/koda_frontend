@@ -1,15 +1,18 @@
-import React from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useState } from 'react';
+import { NavLink, useParams } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
+import { Modal } from '../ui/Modal/Modal';
+import { Button } from '../ui/Button/Button';
 import styles from './AppLayout.module.css';
 
 interface AppLayoutProps {
     children: React.ReactNode;
 }
 
-export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
+export function AppLayout({ children }: Readonly<AppLayoutProps>) {
     const { logout } = useAuth();
     const { projectId } = useParams<{ projectId: string }>();
+    const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
     return (
         <div className={styles.layoutContainer}>
             {/* Sidebar */}
@@ -23,25 +26,35 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                     </div>
                 </div>
                 <nav className={styles.navMenu}>
-                    <Link className={`${styles.navItem} ${styles.navItemActive}`} to="/">
+                    <NavLink 
+                        className={({ isActive }) => `${styles.navItem} ${isActive ? styles.navItemActive : styles.navItemInactive}`} 
+                        to="/"
+                        end
+                    >
                         <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>dashboard</span>
                         <span>Panel de Proyectos</span>
-                    </Link>
+                    </NavLink>
                     {projectId && (
                         <>
-                            <Link className={`${styles.navItem} ${styles.navItemInactive}`} to={`/projects/${projectId}/board`}>
+                            <NavLink 
+                                className={({ isActive }) => `${styles.navItem} ${isActive ? styles.navItemActive : styles.navItemInactive}`} 
+                                to={`/projects/${projectId}/board`}
+                            >
                                 <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>view_kanban</span>
                                 <span>Tablero</span>
-                            </Link>
-                            <Link className={`${styles.navItem} ${styles.navItemInactive}`} to={`/projects/${projectId}/team`}>
+                            </NavLink>
+                            <NavLink 
+                                className={({ isActive }) => `${styles.navItem} ${isActive ? styles.navItemActive : styles.navItemInactive}`} 
+                                to={`/projects/${projectId}/team`}
+                            >
                                 <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>groups</span>
                                 <span>Equipo</span>
-                            </Link>
+                            </NavLink>
                         </>
                     )}
                 </nav>
                 <div className={styles.footerMenu}>
-                    <button onClick={logout} className={`${styles.navItem} ${styles.navItemDanger}`}>
+                    <button onClick={() => setIsLogoutModalOpen(true)} className={`${styles.navItem} ${styles.navItemDanger}`}>
                         <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>logout</span>
                         <span>Cerrar Sesión</span>
                     </button>
@@ -49,6 +62,26 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
             </aside>
 
             {children}
+
+            <Modal
+                isOpen={isLogoutModalOpen}
+                onClose={() => setIsLogoutModalOpen(false)}
+                title="Cerrar Sesión"
+            >
+                <div className={styles.modalContent}>
+                    <p className={styles.modalText}>
+                        ¿Estás seguro de que deseas cerrar tu sesión? Tendrás que volver a ingresar tus credenciales para acceder.
+                    </p>
+                    <div className={styles.modalActions}>
+                        <Button variant="secondary" onClick={() => setIsLogoutModalOpen(false)}>
+                            Cancelar
+                        </Button>
+                        <Button variant="danger" onClick={logout}>
+                            Cerrar Sesión
+                        </Button>
+                    </div>
+                </div>
+            </Modal>
         </div>
     );
-};
+}

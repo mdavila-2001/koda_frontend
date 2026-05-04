@@ -312,3 +312,7 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+.deleteIcon {
+  font-size: 14px;
+}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { type SyntheticEvent, useState } from 'react';
 import { z } from 'zod';
 import { httpClient } from '../../../api/httpClient';
 import styles from './TicketForm.module.css';
@@ -16,13 +16,13 @@ interface TicketFormProps {
   onCancel: () => void;
 }
 
-export const TicketForm: React.FC<TicketFormProps> = ({ projectId, onSuccess, onCancel }) => {
+export function TicketForm({ projectId, onSuccess, onCancel }: Readonly<TicketFormProps>) {
   const [formData, setFormData] = useState<TicketFormData>({ title: '', description: '' });
   const [errors, setErrors] = useState<Partial<Record<keyof TicketFormData, string>>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [globalError, setGlobalError] = useState('');
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrors({});
     setGlobalError('');
@@ -43,13 +43,15 @@ export const TicketForm: React.FC<TicketFormProps> = ({ projectId, onSuccess, on
       onSuccess();
     } catch (error: unknown) {
       if (error instanceof z.ZodError) {
-        const newErrors: typeof errors = {};
-        // Removed deprecated ZodIssue type hint, letting TS infer from issues array
-        error.issues.forEach((err) => {
-          if (err.path[0]) {
-            newErrors[err.path[0] as keyof TicketFormData] = err.message;
+        const newErrors: Partial<Record<keyof TicketFormData, string>> = {};
+
+        error.issues.forEach((issue) => {
+          const path = issue.path[0];
+          if (path === 'title' || path === 'description') {
+            newErrors[path] = issue.message;
           }
         });
+
         setErrors(newErrors);
       } else {
         setGlobalError(error instanceof Error ? error.message : 'Ocurrió un error al crear el ticket');
@@ -61,11 +63,11 @@ export const TicketForm: React.FC<TicketFormProps> = ({ projectId, onSuccess, on
 
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
-      {globalError && (
+      {globalError ? (
         <div className={styles.globalError}>
           {globalError}
         </div>
-      )}
+      ) : null}
 
       <div className={styles.formField}>
         <label htmlFor="ticket-form-title" className={styles.formLabel}>
@@ -75,12 +77,12 @@ export const TicketForm: React.FC<TicketFormProps> = ({ projectId, onSuccess, on
           id="ticket-form-title"
           type="text"
           value={formData.title}
-          onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+          onChange={(e) => setFormData((prev) => ({ ...prev, title: e.target.value }))}
           className={`${styles.formInput} ${errors.title ? styles.formInputError : ''}`}
           placeholder="Ej. Corregir timeout de conexión a base de datos"
           disabled={isSubmitting}
         />
-        {errors.title && <span className={styles.fieldError}>{errors.title}</span>}
+        {errors.title ? <span className={styles.fieldError}>{errors.title}</span> : null}
       </div>
 
       <div className={styles.formField}>
@@ -90,12 +92,12 @@ export const TicketForm: React.FC<TicketFormProps> = ({ projectId, onSuccess, on
         <textarea
           id="ticket-form-description"
           value={formData.description}
-          onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+          onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
           className={`${styles.formTextarea} ${errors.description ? styles.formTextareaError : ''}`}
           placeholder="Proporciona información detallada sobre el problema..."
           disabled={isSubmitting}
         />
-        {errors.description && <span className={styles.fieldError}>{errors.description}</span>}
+        {errors.description ? <span className={styles.fieldError}>{errors.description}</span> : null}
       </div>
 
       <div className={styles.formActions}>
@@ -114,12 +116,12 @@ export const TicketForm: React.FC<TicketFormProps> = ({ projectId, onSuccess, on
         >
           {isSubmitting ? (
             <>
-              <span className={`material-symbols-outlined ${styles.spinIcon}`} style={{ fontSize: '18px' }}>sync</span>
+              <span className={`material-symbols-outlined ${styles.spinIcon} ${styles.iconSmall}`}>sync</span>
               {' '}Creando...
             </>
           ) : (
             <>
-              <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>add</span>
+              <span className={`material-symbols-outlined ${styles.iconSmall}`}>add</span>
               {' '}Crear Ticket
             </>
           )}
@@ -127,4 +129,4 @@ export const TicketForm: React.FC<TicketFormProps> = ({ projectId, onSuccess, on
       </div>
     </form>
   );
-};
+}

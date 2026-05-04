@@ -36,6 +36,10 @@
   filter: brightness(1.1);
 }
 
+.newProjectIcon {
+  font-size: 14px;
+}
+
 .header {
   display: flex;
   justify-content: space-between;

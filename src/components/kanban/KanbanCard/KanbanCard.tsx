@@ -1,8 +1,8 @@
-import React from 'react';
+import { type KeyboardEvent, useLayoutEffect, useRef } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import type { Ticket, User } from '../../../types';
-import styles from './Kanban.module.css';
+import styles from '../Kanban.module.css';
 
 interface KanbanCardProps {
   ticket: Ticket;
@@ -11,11 +11,12 @@ interface KanbanCardProps {
   isOverlay?: boolean;
 }
 
-export const KanbanCard: React.FC<KanbanCardProps> = ({ ticket, members, onClick, isOverlay = false }) => {
+export function KanbanCard({ ticket, members, onClick, isOverlay = false }: Readonly<KanbanCardProps>) {
   const isBlocked = ticket.status === 'PENDING' && !ticket.assigned_user_id;
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
 
   const assignedUser = ticket.assigned_user_id
-    ? members.find(m => m.id === ticket.assigned_user_id) || null
+    ? members.find((member) => member.id === ticket.assigned_user_id) || null
     : null;
 
   const {
@@ -25,22 +26,34 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({ ticket, members, onClick
     transform,
     transition,
     isDragging,
-  } = useSortable({ 
+  } = useSortable({
     id: ticket.id,
-    disabled: isBlocked
+    disabled: isBlocked || isOverlay,
   });
 
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    zIndex: isDragging ? 100 : 'auto',
-  };
+  useLayoutEffect(() => {
+    const node = buttonRef.current;
+    if (!node) return;
 
-  const formattedDate = new Date(ticket.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    node.style.transform = CSS.Transform.toString(transform) || '';
+    node.style.transition = transition || '';
+    node.style.zIndex = isDragging ? '100' : 'auto';
+
+    return () => {
+      node.style.transform = '';
+      node.style.transition = '';
+      node.style.zIndex = '';
+    };
+  }, [isDragging, transform, transition]);
+
+  const formattedDate = new Date(ticket.created_at).toLocaleDateString('es-ES', {
+    month: 'short',
+    day: 'numeric',
+  });
 
   const cardClasses = [
     styles.card,
-    styles.cardAsButton, // Added class for button reset
+    styles.cardAsButton,
     isBlocked ? styles.cardBlocked : '',
     isDragging && !isOverlay ? styles.cardDragging : '',
     isOverlay ? styles.cardOverlay : '',
@@ -51,21 +64,27 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({ ticket, members, onClick
     if (parts.length >= 2) {
       return (parts[0][0] + parts[1][0]).toUpperCase();
     }
+
     return name.substring(0, 2).toUpperCase();
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: KeyboardEvent<HTMLButtonElement>) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       onClick(ticket.id);
     }
   };
 
-  // Render helpers to reduce cognitive complexity and avoid nested ternaries
+  const handleButtonRef = (node: HTMLButtonElement | null) => {
+    buttonRef.current = node;
+    setNodeRef(node);
+  };
+
   const renderBadge = () => {
     if (isBlocked) {
       return <span className={`${styles.cardBadge} ${styles.cardBadgeCritical}`}>PENDIENTE</span>;
     }
+
     if (ticket.status === 'COMPLETED') {
       return (
         <span className={`${styles.cardBadge} ${styles.cardBadgeDone}`}>
@@ -74,6 +93,7 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({ ticket, members, onClick
         </span>
       );
     }
+
     return <span className={`${styles.cardBadge} ${styles.cardBadgeDefault}`}>EN PROGRESO</span>;
   };
 
@@ -83,13 +103,13 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({ ticket, members, onClick
         <div className={styles.cardLock}>
           <span className={`material-symbols-outlined ${styles.cardLockIcon}`}>lock</span>
           <div className={styles.cardLockTooltip}>
-              Asigna un responsable primero
-              <div className={styles.cardLockTooltipArrow}></div>
+            Asigna un responsable primero
+            <div className={styles.cardLockTooltipArrow}></div>
           </div>
         </div>
       );
     }
-    
+
     if (assignedUser) {
       return (
         <div className={styles.cardAvatar} title={assignedUser.name}>
@@ -110,10 +130,9 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({ ticket, members, onClick
   };
 
   return (
-    <button 
-      ref={setNodeRef} 
-      style={style} 
-      {...attributes} 
+    <button
+      ref={handleButtonRef}
+      {...attributes}
       {...listeners}
       onKeyDown={handleKeyDown}
       onClick={() => onClick(ticket.id)}
@@ -130,15 +149,15 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({ ticket, members, onClick
 
       <h4 className={styles.cardTitle}>{ticket.title}</h4>
       <p className={styles.cardDescription}>{ticket.description || 'No description provided'}</p>
-      
+
       <div className={styles.cardFooter}>
         <div className={styles.cardDate}>
           <span className={`material-symbols-outlined ${styles.cardDateIcon}`}>calendar_today</span>
           {' '}<span className={styles.cardDateText}>{formattedDate}</span>
         </div>
-        
+
         {renderAvatar()}
       </div>
     </button>
   );
-};
+}

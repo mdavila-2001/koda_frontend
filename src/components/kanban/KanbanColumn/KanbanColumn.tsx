@@ -1,9 +1,8 @@
-import React from 'react';
 import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import type { Ticket, User } from '../../../types';
-import { KanbanCard } from './KanbanCard';
-import styles from './Kanban.module.css';
+import { KanbanCard } from '../KanbanCard/KanbanCard';
+import styles from '../Kanban.module.css';
 
 interface KanbanColumnProps {
   id: string;
@@ -13,9 +12,9 @@ interface KanbanColumnProps {
   onCardClick: (id: string) => void;
 }
 
-export const KanbanColumn: React.FC<KanbanColumnProps> = ({ id, title, tickets, members, onCardClick }) => {
+export function KanbanColumn({ id, title, tickets, members, onCardClick }: Readonly<KanbanColumnProps>) {
   const { setNodeRef } = useDroppable({
-    id: id,
+    id,
   });
 
   return (
@@ -26,20 +25,20 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({ id, title, tickets, 
           <h3 className={styles.columnTitle}>{title}</h3>
           <span className={styles.ticketCount}>{tickets.length}</span>
         </div>
-        <button className={styles.columnMenuButton}>
-          <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>more_horiz</span>
+        <button type="button" className={styles.columnMenuButton}>
+          <span className={`material-symbols-outlined ${styles.columnMenuIcon}`}>more_horiz</span>
         </button>
       </div>
-      <div 
+      <div
         ref={setNodeRef}
         className={styles.columnBody}
       >
-        <SortableContext items={tickets.map(t => t.id)} strategy={verticalListSortingStrategy}>
-          {tickets.map(ticket => (
+        <SortableContext items={tickets.map((ticket) => ticket.id)} strategy={verticalListSortingStrategy}>
+          {tickets.map((ticket) => (
             <KanbanCard key={ticket.id} ticket={ticket} members={members} onClick={onCardClick} />
           ))}
         </SortableContext>
       </div>
     </div>
   );
-};
+}

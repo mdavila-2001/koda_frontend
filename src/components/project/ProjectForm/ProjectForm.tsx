@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
+import { type SyntheticEvent, useState } from 'react';
 import { z } from 'zod';
-import { Input } from '../../../components/ui/Input/Input';
-import { Button } from '../../../components/ui/Button/Button';
 import { httpClient } from '../../../api/httpClient';
+import { Button } from '../../ui/Button/Button';
+import { Input } from '../../ui/Input/Input';
 import styles from './ProjectForm.module.css';
 
 const createProjectSchema = z.object({
   name: z.string()
-    .min(3, "El nombre debe tener al menos 3 caracteres")
-    .max(100, "El nombre no puede superar los 100 caracteres"),
+    .min(3, 'El nombre debe tener al menos 3 caracteres')
+    .max(100, 'El nombre no puede superar los 100 caracteres'),
   description: z.string()
-    .max(500, "La descripción no puede superar los 500 caracteres")
-    .optional()
+    .max(500, 'La descripción no puede superar los 500 caracteres')
+    .optional(),
 });
 
 type ProjectFormData = z.infer<typeof createProjectSchema>;
@@ -21,27 +21,30 @@ interface ProjectFormProps {
   onCancel: () => void;
 }
 
-export const ProjectForm: React.FC<ProjectFormProps> = ({ onSuccess, onCancel }) => {
+export function ProjectForm({ onSuccess, onCancel }: Readonly<ProjectFormProps>) {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [globalError, setGlobalError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrors({});
     setGlobalError('');
 
     const formData = new FormData(e.currentTarget);
+    const name = formData.get('name');
+    const description = formData.get('description');
+
     const data: ProjectFormData = {
-      name: formData.get('name') as string,
-      description: formData.get('description') as string,
+      name: typeof name === 'string' ? name : '',
+      description: typeof description === 'string' ? description : undefined,
     };
 
     const result = createProjectSchema.safeParse(data);
 
     if (!result.success) {
       const fieldErrors: Record<string, string> = {};
-      result.error.issues.forEach(issue => {
+      result.error.issues.forEach((issue) => {
         const path = issue.path[0];
         if (typeof path === 'string' || typeof path === 'number') {
           fieldErrors[path.toString()] = issue.message;
@@ -68,11 +71,11 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ onSuccess, onCancel })
 
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
-      {globalError && (
+      {globalError ? (
         <div className={styles.globalError}>
           {globalError}
         </div>
-      )}
+      ) : null}
 
       <div className={styles.formGroup}>
         <Input
@@ -95,7 +98,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ onSuccess, onCancel })
           placeholder="Describe brevemente el propósito de este proyecto..."
           disabled={isLoading}
         />
-        {errors.description && <p className={styles.errorText}>{errors.description}</p>}
+        {errors.description ? <p className={styles.errorText}>{errors.description}</p> : null}
       </div>
 
       <div className={styles.actions}>
@@ -116,4 +119,4 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ onSuccess, onCancel })
       </div>
     </form>
   );
-};
+}

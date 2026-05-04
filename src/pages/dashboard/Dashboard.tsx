@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { AppLayout } from '../../components/layout/AppLayout';
 import { Modal } from '../../components/ui/Modal/Modal';
 import { ProjectCard } from '../../components/ui/ProjectCard/ProjectCard';
-import { ProjectForm } from './components/ProjectForm';
+import { ProjectForm } from '../../components/project/ProjectForm/ProjectForm';
 import { useProjects } from '../../hooks/useProjects';
 import styles from './Dashboard.module.css';
 
-export const Dashboard: React.FC = () => {
+export function Dashboard() {
   const { projects, isLoading, refetch } = useProjects();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -49,11 +49,12 @@ export const Dashboard: React.FC = () => {
               <h1 className={styles.title}>Panel de Control</h1>
               <p className={styles.subtitle}>Resumen de tus proyectos técnicos activos.</p>
             </div>
-            <button 
+            <button
+              type="button"
               className={styles.newProjectButton}
               onClick={() => setIsModalOpen(true)}
             >
-              <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>add</span>
+              <span className={`material-symbols-outlined ${styles.newProjectIcon}`}>add</span>
               {' '}Nuevo Proyecto
             </button>
           </header>
@@ -74,4 +75,4 @@ export const Dashboard: React.FC = () => {
       </main>
     </AppLayout>
   );
-};
+}

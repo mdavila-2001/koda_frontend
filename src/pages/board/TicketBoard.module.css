@@ -89,6 +89,10 @@
   transform: scale(0.95);
 }
 
+.newTicketIcon {
+  font-size: 18px;
+}
+
 .newTicketButton .iconSmall {
   font-size: 18px;
 }

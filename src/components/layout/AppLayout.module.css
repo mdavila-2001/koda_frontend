@@ -135,3 +135,22 @@
   overflow-y: auto;
   box-sizing: border-box;
 }
+
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.modalText {
+  color: #94A3B8;
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.modalActions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}

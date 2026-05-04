@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AppLayout } from '../../components/layout/AppLayout';
 import { useTickets } from '../../hooks/useTickets';
 import type { Ticket } from '../../types';
-import { TicketDetailDrawer } from './components/TicketDetailDrawer';
-import { TicketForm } from './components/TicketForm';
+import { TicketDetailDrawer } from '../../components/ticket/TicketDetailDrawer/TicketDetailDrawer';
+import { TicketForm } from '../../components/ticket/TicketForm/TicketForm';
 import { Modal } from '../../components/ui/Modal/Modal';
 import { 
   DndContext, 
@@ -16,11 +16,11 @@ import {
   DragOverlay
 } from '@dnd-kit/core';
 import type { DragEndEvent, DragStartEvent } from '@dnd-kit/core';
-import { KanbanColumn } from './components/KanbanColumn';
-import { KanbanCard } from './components/KanbanCard';
-import styles from './components/Kanban.module.css';
+import { KanbanColumn } from '../../components/kanban/KanbanColumn/KanbanColumn';
+import { KanbanCard } from '../../components/kanban/KanbanCard/KanbanCard';
+import styles from './TicketBoard.module.css';
 
-export const TicketBoard: React.FC = () => {
+export function TicketBoard() {
   const { projectId } = useParams<{ projectId: string }>();
   const { tickets, members, isLoading, refetch, updateTicketStatus } = useTickets(projectId);
   const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null);
@@ -73,8 +73,8 @@ export const TicketBoard: React.FC = () => {
                 <h1 className={styles.boardTitle}>Tickets</h1>
                 <p className={styles.boardSubtitle}>Gestiona y resuelve las solicitudes de soporte activas.</p>
               </div>
-              <button onClick={() => setIsModalOpen(true)} className={styles.newTicketButton}>
-                <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>add</span>
+              <button type="button" onClick={() => setIsModalOpen(true)} className={styles.newTicketButton}>
+                <span className={`material-symbols-outlined ${styles.newTicketIcon}`}>add</span>
                 {' '}Nuevo Ticket
               </button>
             </div>
@@ -161,4 +161,4 @@ export const TicketBoard: React.FC = () => {
       </main>
     </AppLayout>
   );
-};
+}

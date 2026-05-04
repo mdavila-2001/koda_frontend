@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { httpClient } from '../../../api/httpClient';
-import type { Ticket, User, Project } from '../../../types';
 import { useAuth } from '../../../hooks/useAuth';
+import type { Project, Ticket, User } from '../../../types';
 import styles from './TicketDrawer.module.css';
 
 interface TicketDetailDrawerProps {
@@ -12,7 +12,7 @@ interface TicketDetailDrawerProps {
   onUpdate: () => void;
 }
 
-export const TicketDetailDrawer: React.FC<TicketDetailDrawerProps> = ({ ticket, members, onClose, onUpdate }) => {
+export function TicketDetailDrawer({ ticket, members, onClose, onUpdate }: Readonly<TicketDetailDrawerProps>) {
   const { user } = useAuth();
   const { projectId } = useParams<{ projectId: string }>();
   const [isUpdating, setIsUpdating] = useState(false);
@@ -23,6 +23,7 @@ export const TicketDetailDrawer: React.FC<TicketDetailDrawerProps> = ({ ticket, 
   useEffect(() => {
     const fetchProject = async () => {
       if (!projectId) return;
+
       setIsLoadingData(true);
       try {
         const projectData = await httpClient<Project>(`/projects/${projectId}`);
@@ -33,11 +34,12 @@ export const TicketDetailDrawer: React.FC<TicketDetailDrawerProps> = ({ ticket, 
         setIsLoadingData(false);
       }
     };
-    fetchProject();
+
+    void fetchProject();
   }, [projectId]);
 
   const assignedUser = ticket.assigned_user_id
-    ? members.find(m => m.id === ticket.assigned_user_id) || null
+    ? members.find((member) => member.id === ticket.assigned_user_id) || null
     : null;
 
   const handleAssignUser = async (userId: string) => {
@@ -56,7 +58,9 @@ export const TicketDetailDrawer: React.FC<TicketDetailDrawerProps> = ({ ticket, 
   };
 
   const handleAssignToMe = () => {
-    if (user) handleAssignUser(user.id);
+    if (!user) return;
+
+    void handleAssignUser(user.id);
   };
 
   const handleUpdateStatus = async (newStatus: Ticket['status']) => {
@@ -75,7 +79,8 @@ export const TicketDetailDrawer: React.FC<TicketDetailDrawerProps> = ({ ticket, 
   };
 
   const handleDeleteTicket = async () => {
-    if (!confirm('¿Estás seguro de que deseas eliminar este ticket?')) return;
+    if (!globalThis.confirm('¿Estás seguro de que deseas eliminar este ticket?')) return;
+
     setIsDeleting(true);
     try {
       await httpClient(`/tickets/${ticket.id}`, { method: 'DELETE' });
@@ -90,7 +95,6 @@ export const TicketDetailDrawer: React.FC<TicketDetailDrawerProps> = ({ ticket, 
 
   const isPending = ticket.status === 'PENDING';
 
-  // Render helpers to reduce complexity and address nested ternary warnings
   const renderAssigneeSection = () => {
     if (isLoadingData) {
       return <div className={styles.loadingText}>Cargando...</div>;
@@ -101,12 +105,12 @@ export const TicketDetailDrawer: React.FC<TicketDetailDrawerProps> = ({ ticket, 
         <select
           id="assignee-select"
           value={ticket.assigned_user_id || ''}
-          onChange={(e) => handleAssignUser(e.target.value)}
+          onChange={(e) => void handleAssignUser(e.target.value)}
           disabled={isUpdating}
           className={styles.assigneeSelect}
         >
-          <option value="" disabled>Elije un responsable...</option>
-          {members.map(member => (
+          <option value="" disabled>Elige un responsable...</option>
+          {members.map((member) => (
             <option key={member.id} value={member.id}>
               {member.name} ({member.email})
             </option>
@@ -128,13 +132,14 @@ export const TicketDetailDrawer: React.FC<TicketDetailDrawerProps> = ({ ticket, 
       return (
         <div className={styles.assigneeInfo}>
           <span className="material-symbols-outlined">person_check</span>
-          <span>Assigned to Team Member</span>
+          <span>Asignado a un miembro del equipo</span>
         </div>
       );
     }
 
     return (
       <button
+        type="button"
         onClick={handleAssignToMe}
         disabled={isUpdating}
         className={styles.assignButton}
@@ -163,7 +168,7 @@ export const TicketDetailDrawer: React.FC<TicketDetailDrawerProps> = ({ ticket, 
             <span className={styles.drawerStatusText}>{ticket.status}</span>
           </div>
         </div>
-        <button onClick={onClose} className={styles.drawerCloseButton} aria-label="Close drawer">
+        <button type="button" onClick={onClose} className={styles.drawerCloseButton} aria-label="Cerrar panel">
           <span className="material-symbols-outlined">close</span>
         </button>
       </div>
@@ -173,7 +178,7 @@ export const TicketDetailDrawer: React.FC<TicketDetailDrawerProps> = ({ ticket, 
           <label htmlFor="ticket-title" className={styles.fieldLabel}>Título</label>
           <input id="ticket-title" readOnly className={styles.fieldInput} type="text" value={ticket.title} />
         </div>
-        
+
         <div className={styles.fieldGroup}>
           <label htmlFor="ticket-description" className={styles.fieldLabel}>Descripción</label>
           <textarea id="ticket-description" readOnly className={styles.fieldTextarea} value={ticket.description || ''}></textarea>
@@ -187,14 +192,15 @@ export const TicketDetailDrawer: React.FC<TicketDetailDrawerProps> = ({ ticket, 
         <div className={styles.metaSection}>
           <div className={styles.metaRow}>
             <span>Creado</span>
-            <span className={styles.metaValue}>{new Date(ticket.created_at).toLocaleDateString()}</span>
+            <span className={styles.metaValue}>{new Date(ticket.created_at).toLocaleDateString('es-ES')}</span>
           </div>
         </div>
       </div>
 
       <div className={styles.drawerFooter}>
-        <button 
-          onClick={() => handleUpdateStatus(isPending ? 'IN_PROGRESS' : 'COMPLETED')}
+        <button
+          type="button"
+          onClick={() => void handleUpdateStatus(isPending ? 'IN_PROGRESS' : 'COMPLETED')}
           disabled={isUpdating || ticket.status === 'COMPLETED' || !ticket.assigned_user_id}
           className={styles.actionButtonPrimary}
         >
@@ -203,11 +209,11 @@ export const TicketDetailDrawer: React.FC<TicketDetailDrawerProps> = ({ ticket, 
           </span>
           {getStatusActionLabel()}
         </button>
-        <button onClick={handleDeleteTicket} disabled={isDeleting} className={styles.deleteButton}>
-          <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>delete</span>
+        <button type="button" onClick={handleDeleteTicket} disabled={isDeleting} className={styles.deleteButton}>
+          <span className={`material-symbols-outlined ${styles.deleteIcon}`}>delete</span>
           {' '}Eliminar Ticket
         </button>
       </div>
     </aside>
   );
-};
+}
